@@ -80,7 +80,8 @@ def gerar_xml():
      if arquivo_carregado:
 
           # Dados para chamar a API
-          api_endpoint = 'http://localhost:8000/gerar_xml'
+          api_endpoint_local = 'http://localhost:8000/gerar_xml'
+          api_endpoint = 'https://gerador-xml-api-6doupywhkq-ew.a.run.app/gerar_xml'
 
           payload={'tipo_input': 'csv',
           'operadora': operadora_escolhida,
