@@ -1,7 +1,2 @@
 streamlit
-#datetime
-#requests
-#io
-#zipfile
-#json
 setuptools
