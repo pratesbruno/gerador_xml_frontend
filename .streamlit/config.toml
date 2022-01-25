@@ -168,4 +168,4 @@ showPyplotGlobalUse = true
 
 [theme]
 base="light"
-primaryColor="#00afaa"
+#primaryColor="#00afaa"
