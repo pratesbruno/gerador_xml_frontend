@@ -1,8 +1,7 @@
 streamlit
-PIL
-datetime
-requests
-io
-zipfile
-json
+#datetime
+#requests
+#io
+#zipfile
+#json
 setuptools
