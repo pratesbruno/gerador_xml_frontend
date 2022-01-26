@@ -34,13 +34,17 @@ if seletor_modulo == modulos[0]:
 
      # Cria o file_uploader, onde o usuário pode subir um arquivo .csv
      arquivo_carregado = col1.file_uploader("Escolha um arquivo", type=['csv'])
-     try:
-          arquivo_lido = arquivo_carregado.read()
-          s=str(arquivo_lido,'utf-8')
-          data = StringIO(s)
-          
-     except:
-          col1.write('Nenhum arquivo carregado até o momento.')
+     if not arquivo_carregado:
+          col1.warning('Nenhum arquivo carregado até o momento.')
+
+     else:
+          try:
+               arquivo_lido = arquivo_carregado.read()
+               s=str(arquivo_lido,'utf-8')
+               data = StringIO(s)
+               
+          except Exception as e:
+               col1.error('Erro ao ler o arquivo. Verifique se ele está no formato correto.')
 
      col1.markdown(
      '''
@@ -83,14 +87,10 @@ if seletor_modulo == modulos[0]:
           data_registro_transacao = datetime.now().strftime("%Y%m%d")
 
           if arquivo_carregado:
-
                # Dados para chamar a API
-               api_local = 'http://localhost:8000'
-               api_endpoint = 'https://gerador-xml-api-6doupywhkq-ew.a.run.app/gerar_xml'
+               api_endpoint = 'https://api-gerador-xml-6doupywhkq-ew.a.run.app/gerar_xml'
 
-               payload={'tipo_input': 'csv',
-               'operadora': operadora_escolhida,
-               'seq_transacao': f'{data_registro_transacao}{codigo_tipo_produto}01', # Pensar em como não repetir
+               payload={'operadora': operadora_escolhida,
                'tipo_produto': tipo_produto}
 
                files=[('file',('file_name',arquivo_carregado.getbuffer(),'text/csv'))]
@@ -107,11 +107,12 @@ if seletor_modulo == modulos[0]:
                numero_arquivos_xml = dict_resposta.get('numero_arquivos_xml')
                valor_total = dict_resposta.get('valor_total_arquivos')
                avisos = dict_resposta.get('avisos')
-               erro = dict_resposta.get('error')
+               exception = dict_resposta.get('exception')
 
                # Exibe mensagem de sucesso/erro da API
                if avisos:
-                    col1.write(avisos)     
+                    for aviso in avisos:
+                         col1.write(aviso)
                col1.write(mensagem)
                
                # Checa se a API funcionou corretamente (verificando se ela retornou arquivos XML). Caso positivo, cria o botao para baixar os XML.
@@ -146,11 +147,12 @@ if seletor_modulo == modulos[0]:
 
                # Caso a api nao tenha retornado arquivos XML, é porque ela falhou. Nesse caso, mostra a mensagem de erro.
                else:
-                    col1.write(f'Mensagem de erro: {erro}')
+                    col1.write(f'Mensagem de erro:')
+                    col1.error(exception)
 
           # Caso não tenha nenhum arquivo csv carregado, exibe uma mensagem de erro.
           else:
-               col1.write("Nenhum arquivo csv escolhido. Por favor, escolha um arquivo primeiro.")
+               col1.warning("Nenhum arquivo csv escolhido. Por favor, escolha um arquivo primeiro.")
 
      col1.button('Gerar XML', on_click=gerar_xml)
 
