@@ -85,6 +85,7 @@ if seletor_modulo == modulos[0]:
           if arquivo_carregado:
 
                # Dados para chamar a API
+               api_local = 'http://localhost:8000'
                api_endpoint = 'https://gerador-xml-api-6doupywhkq-ew.a.run.app/gerar_xml'
 
                payload={'tipo_input': 'csv',
@@ -105,10 +106,12 @@ if seletor_modulo == modulos[0]:
                num_guias = dict_resposta.get('num_guias')
                numero_arquivos_xml = dict_resposta.get('numero_arquivos_xml')
                valor_total = dict_resposta.get('valor_total_arquivos')
-               lista_sequencial_transacao = dict_resposta.get('lista_sequencial_transacao')
+               avisos = dict_resposta.get('avisos')
                erro = dict_resposta.get('error')
 
                # Exibe mensagem de sucesso/erro da API
+               if avisos:
+                    col1.write(avisos)     
                col1.write(mensagem)
                
                # Checa se a API funcionou corretamente (verificando se ela retornou arquivos XML). Caso positivo, cria o botao para baixar os XML.
